@@ -2,7 +2,7 @@ package com.sunll.flink.stream
 
 import org.apache.flink.api.common.functions.Partitioner
 import org.apache.flink.api.java.tuple.Tuple
-import org.apache.flink.streaming.api.scala.{DataStream, KeyedStream, StreamExecutionEnvironment}
+import org.apache.flink.streaming.api.scala.{AsyncDataStream, DataStream, KeyedStream, StreamExecutionEnvironment}
 import org.apache.flink.api.scala._
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks
 import org.apache.flink.streaming.api.watermark.Watermark
@@ -30,7 +30,7 @@ object StreamTransformationApp01 {
 //    val res2: DataStream[(String, Long)] = input.keyBy(0).min(1)
 //    res.print()
 //    res2.print()
-    //val res = input.keyBy(0).window(TumblingEventTimeWindows.of(Time.seconds(5)))
+    val res = input.keyBy(0).window(TumblingEventTimeWindows.of(Time.seconds(5)))
     val input2: DataStream[Int] = env.fromElements(
       100,
       201,
@@ -79,8 +79,8 @@ object StreamTransformationApp01 {
 //},0)
 //    res.print()
     //input.broadcast()
-    val res = input.map(_._2).startNewChain().map(x => x).disableChaining().map(x => x)
-    res.print()
+    //val res = input.map(_._2).startNewChain().map(x => x).disableChaining().map(x => x)
+    //res.print()
     env.execute()
 
   }

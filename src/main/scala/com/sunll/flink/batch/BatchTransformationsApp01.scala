@@ -1,10 +1,16 @@
 package com.sunll.flink.batch
 
+import org.apache.flink.api.common.functions.RichMapFunction
 import org.apache.flink.api.common.operators.Order
 import org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHint
 import org.apache.flink.api.java.aggregation.Aggregations
 import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.api.scala._
+import org.apache.flink.configuration.Configuration
+
+import scala.collection.JavaConverters._
+import scala.collection.mutable
+
 
 /**
   * desc
@@ -25,7 +31,7 @@ object BatchTransformationsApp01 {
 //    input.distinct().print()
 //    input.distinct(0).print()
     //input.join(input, JoinHint.BROADCAST_HASH_FIRST).where(0).equalTo(0).print()
-    val input2 = env.fromElements(("a", 200), ("b", 100), ("c",300), ("d", 500)).setParallelism(2)
+    val input2 = env.fromElements(("a", 200), ("b", 100), ("c",300), ("d", 500)).setParallelism(4)
 //    input.coGroup(input2).where(0).equalTo(0).map(_._2).print()
     //input.cross(input2).print()
     //input.union(input2).print()
@@ -33,6 +39,27 @@ object BatchTransformationsApp01 {
 //    input.groupBy(0).first(2).print()
 //    println("-------------------")
 //    input.groupBy(0).sortGroup(1, Order.DESCENDING).first(2).print()
-    input2.minBy(1, 0).print()
+    //input2.minBy(1, 0).print()
+//    input2.sortPartition(1, Order.ASCENDING).print()//仅仅是分区内的排序
+//    input2.setParallelism(1).sortPartition(1, Order.ASCENDING).print()//全部元素排序
+//    input2.sortPartition(1, Order.ASCENDING).writeAsText("E:\\test\\1.txt\\")
+//    env.execute()
+    //input.map(x => ("foo", x._2, x._1)).withForwardedFields("_1->_3; _2").print()
+
+    //广播变量
+    input.map(new RichMapFunction[(String, Int), (String, Int, Int)](){
+      var bc: Traversable[(String, Int)]= null
+      var res = 0
+      override def open(parameters: Configuration): Unit = {
+        bc = getRuntimeContext.getBroadcastVariable[(String, Int)]("bc_input2").asScala
+        for (i <- bc){
+          res += i._2
+        }
+      }
+      override def map(in: (String, Int)): (String, Int, Int) = {
+        (in._1, in._2, res)
+      }
+    }).withBroadcastSet(input2, "bc_input2").print()
+
   }
 }

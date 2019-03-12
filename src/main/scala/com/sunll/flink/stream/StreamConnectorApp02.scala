@@ -7,7 +7,7 @@ import org.apache.flink.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer09
 import org.apache.flink.streaming.util.serialization.{JSONKeyValueDeserializationSchema, SimpleStringSchema}
 /**
-  * 会介绍几个常用的流式connector
+  * 会介绍几个常用的流式connector，这里只有kafka的，其他的没有- -
   *
   * @author sunliangliang 2019-03-01 https://github.com/sunliangliang9201/tv_realtime_display
   * @version 1.0
@@ -20,6 +20,7 @@ object StreamConnectorApp02 {
 
   def kafkaConnector(): Unit ={
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+    env.enableCheckpointing(5000)
     val prop: Properties = new Properties()
     prop.setProperty("bootstrap.servers", "103.26.158.194:9092, 103.26.158.195:9092")
     prop.setProperty("group.id", "test")

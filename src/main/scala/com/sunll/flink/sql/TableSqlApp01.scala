@@ -31,7 +31,7 @@ object TableSqlApp01 {
 //    val table2 = tableEnv.scan("t1")
 //    table2.select("name").toRetractStream[String].print()
     tableEnv.registerTable("t2", table1)
-    tableEnv.sqlQuery("select age1 from t2").toRetractStream[Int].print()
+    tableEnv.sqlQuery("select age1 from t2").toAppendStream[Int].print()
     tableEnv.scan("t1").printSchema()
     println(tableEnv.explain(table1))
 

@@ -40,35 +40,37 @@ object Example01 {
     tableEnv.registerDataStream("Orders", ds, 'user, 'product, 'amount, 'proctime.proctime, 'rowtime.rowtime)
     // compute SUM(amount) per day (in event-time)
     tableEnv.sqlQuery("select * from Orders").toAppendStream[(Long, String, Int, Timestamp, Timestamp)](queryConfig).print()
-//    val result1 = tableEnv.sqlQuery(
-//      """
-//        |SELECT
-//        |  user,
-//        |  TUMBLE_START(rowtime, INTERVAL '2' second) as wStart,
-//        |  SUM(amount)
-//        | FROM Orders
-//        | GROUP BY TUMBLE(rowtime, INTERVAL '2' second), user
-//      """.stripMargin)
-//    result1.toAppendStream[(Long, Timestamp, Int)](queryConfig).print()
-    // compute SUM(amount) per day (in processing-time)
-//    val result2 = tableEnv.sqlQuery(
-//      "SELECT user, SUM(amount) FROM Orders GROUP BY TUMBLE(proctime, INTERVAL '1' DAY), user")
-//
-//    // compute every hour the SUM(amount) of the last 24 hours in event-time
-//    val result3 = tableEnv.sqlQuery(
-//      "SELECT product, SUM(amount) FROM Orders GROUP BY HOP(rowtime, INTERVAL '1' HOUR, INTERVAL '1' DAY), product")
-//
-//    // compute SUM(amount) per session with 12 hour inactivity gap (in event-time)
-//    val result4 = tableEnv.sqlQuery(
-//      """
-//        |SELECT
-//        |  user,
-//        |  SESSION_START(rowtime, INTERVAL '12' HOUR) AS sStart,
-//        |  SESSION_END(rowtime, INTERVAL '12' HOUR) AS sEnd,
-//        |  SUM(amount)
-//        | FROM Orders
-//        | GROUP BY SESSION(rowtime(), INTERVAL '12' HOUR), user
-//      """.stripMargin)
+
+    ////下面这几个例子作为之后实现tv展示需求的法宝！！当然由于上面数据不合格所以无法看下面这几个query的结果
+    val result1 = tableEnv.sqlQuery(
+      """
+        |SELECT
+        |  user,
+        |  TUMBLE_START(rowtime, INTERVAL '2' second) as wStart,
+        |  SUM(amount)
+        | FROM Orders
+        | GROUP BY TUMBLE(rowtime, INTERVAL '2' second), user
+      """.stripMargin)
+    result1.toAppendStream[(Long, Timestamp, Int)](queryConfig).print()
+     //compute SUM(amount) per day (in processing-time)
+    val result2 = tableEnv.sqlQuery(
+      "SELECT user, SUM(amount) FROM Orders GROUP BY TUMBLE(proctime, INTERVAL '1' DAY), user")
+
+    // compute every hour the SUM(amount) of the last 24 hours in event-time
+    val result3 = tableEnv.sqlQuery(
+      "SELECT product, SUM(amount) FROM Orders GROUP BY HOP(rowtime, INTERVAL '1' HOUR, INTERVAL '1' DAY), product")
+
+    // compute SUM(amount) per session with 12 hour inactivity gap (in event-time)
+    val result4 = tableEnv.sqlQuery(
+      """
+        |SELECT
+        |  user,
+        |  SESSION_START(rowtime, INTERVAL '12' HOUR) AS sStart,
+        |  SESSION_END(rowtime, INTERVAL '12' HOUR) AS sEnd,
+        |  SUM(amount)
+        | FROM Orders
+        | GROUP BY SESSION(rowtime, INTERVAL '12' HOUR), user
+      """.stripMargin)
     env.execute()
   }
 }

@@ -23,7 +23,6 @@ object SocketWindowWordCount {
 //      }
 //    }
     val port = 9898
-
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
     env.setBufferTimeout(1000)
     //env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
@@ -34,9 +33,8 @@ object SocketWindowWordCount {
                                                     .map(WordWithCount(_, 1))
                                                     .keyBy("word")
                                                     .timeWindow(Time.seconds(5), Time.seconds(1))
-                                                    .sum("count")
+                                                      .sum(1)
     windowCount.print().setParallelism(1)
-
     env.execute("Socket Window WordCount")
   }
 }

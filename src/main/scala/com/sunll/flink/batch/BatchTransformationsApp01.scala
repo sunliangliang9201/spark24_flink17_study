@@ -62,6 +62,5 @@ object BatchTransformationsApp01 {
     }).withBroadcastSet(input2, "bc_input2").print()
     val input3: DataSet[String] = env.fromElements("A", "B", "C", "D", "E", "F", "G", "H")
     env.setParallelism(2)
-    input3
   }
 }

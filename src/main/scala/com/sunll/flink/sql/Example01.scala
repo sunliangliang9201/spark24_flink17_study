@@ -3,6 +3,7 @@ package com.sunll.flink.sql
 import java.sql.Timestamp
 import java.util.TimeZone
 
+import org.apache.flink.api.common.restartstrategy.RestartStrategies
 import org.apache.flink.api.common.time.Time
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.table.api.TableEnvironment
@@ -20,8 +21,11 @@ object Example01 {
 
   def main(args: Array[String]): Unit = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
+    env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3,Time.seconds(10)))
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
-    env.enableCheckpointing(5000)
+    env.enableCheckpointing(10000)
+    env.getCheckpointConfig.setCheckpointInterval(5000)
+    env.getConfig.setUseSnapshotCompression(true)
     val tableEnv = TableEnvironment.getTableEnvironment(env)
     val tableConfig = tableEnv.getConfig
     tableConfig.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"))

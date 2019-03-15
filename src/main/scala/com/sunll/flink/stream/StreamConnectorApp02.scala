@@ -35,12 +35,11 @@ object StreamConnectorApp02 {
 //    kafkaStream.print()
     //看看新版本的message有什么不同
     //val kafkaConsumer2 = new FlinkKafkaConsumer[String]("bf.bftv.tv_real_time", new SimpleStringSchema(), prop)
-    val kafkaConsumer2 = new FlinkKafkaConsumer[String]("bf.bftv.tv_real_time", new KeyedDeserializationSchema(), prop)
-    kafkaConsumer2.setStartFromLatest()
-    kafkaConsumer2.setStartFromGroupOffsets()
-    val kafkaStream = env.addSource(kafkaConsumer2)
-    kafkaStream.print()
-    new   KafkaTableSink()
+//    val kafkaConsumer2 = new FlinkKafkaConsumer[String]("bf.bftv.tv_real_time", new KeyedDeserializationSchema(), prop)
+//    kafkaConsumer2.setStartFromLatest()
+//    kafkaConsumer2.setStartFromGroupOffsets()
+//    val kafkaStream = env.addSource(kafkaConsumer2)
+//    kafkaStream.print()
     env.execute()
   }
 }

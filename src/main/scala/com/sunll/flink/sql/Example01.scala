@@ -26,6 +26,7 @@ object Example01 {
     env.enableCheckpointing(10000)
     env.getCheckpointConfig.setCheckpointInterval(5000)
     env.getConfig.setUseSnapshotCompression(true)
+    env.setMaxParallelism(128)
     val tableEnv = TableEnvironment.getTableEnvironment(env)
     val tableConfig = tableEnv.getConfig
     tableConfig.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"))

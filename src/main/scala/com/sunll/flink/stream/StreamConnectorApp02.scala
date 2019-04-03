@@ -2,14 +2,12 @@ package com.sunll.flink.stream
 
 import java.util.Properties
 
-import org.apache.flink.api.common.serialization.TypeInformationSerializationSchema
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import org.apache.flink.api.scala._
-import org.apache.flink.streaming.connectors.kafka.{FlinkKafkaConsumer, KafkaTableSink}
-import org.apache.flink.streaming.util.serialization.{KeyedDeserializationSchema, TypeInformationKeyValueSerializationSchema}
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
+import org.apache.flink.streaming.util.serialization.KeyedDeserializationSchema
 //import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
 //import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer09
-import org.apache.flink.streaming.util.serialization.{JSONKeyValueDeserializationSchema, SimpleStringSchema}
 /**
   * 会介绍几个常用的流式connector，这里只有kafka的，其他的没有- -
   *
@@ -35,11 +33,11 @@ object StreamConnectorApp02 {
 //    kafkaStream.print()
     //看看新版本的message有什么不同
     //val kafkaConsumer2 = new FlinkKafkaConsumer[String]("bf.bftv.tv_real_time", new SimpleStringSchema(), prop)
-//    val kafkaConsumer2 = new FlinkKafkaConsumer[String]("bf.bftv.tv_real_time", new KeyedDeserializationSchema(), prop)
-//    kafkaConsumer2.setStartFromLatest()
-//    kafkaConsumer2.setStartFromGroupOffsets()
-//    val kafkaStream = env.addSource(kafkaConsumer2)
-//    kafkaStream.print()
+    //val kafkaConsumer2 = new FlinkKafkaConsumer[String]("bf.bftv.tv_real_time", new MyKeyedDeserializationSchema(), prop)
+    //kafkaConsumer2.setStartFromLatest()
+
+    //val kafkaStream = env.addSource(kafkaConsumer2)
+    //kafkaStream.print()
     env.execute()
   }
 }

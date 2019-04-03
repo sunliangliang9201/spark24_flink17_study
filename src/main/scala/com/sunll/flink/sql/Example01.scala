@@ -24,7 +24,7 @@ object Example01 {
     env.setRestartStrategy(RestartStrategies.fixedDelayRestart(3,Time.seconds(10)))
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
     env.enableCheckpointing(10000)
-    env.getCheckpointConfig.setCheckpointInterval(5000)
+    env.getCheckpointConfig.setMinPauseBetweenCheckpoints(5000)
     env.getConfig.setUseSnapshotCompression(true)
     env.setMaxParallelism(128)
     val tableEnv = TableEnvironment.getTableEnvironment(env)
